@@ -8,7 +8,7 @@ class AuthorizationTables extends Model
 {
     protected $table = "Authorization_tbl";
 
-    protected $primaryKey = 'tableName';
+    public $primaryKey = 'tableName';//[ 'tableName','permission'];
 
     public $incrementing = false;
 
@@ -18,7 +18,15 @@ class AuthorizationTables extends Model
      * @var array
      */
     protected $fillable = [
-        'Users_JSON', 'tableName', 'group_granRole_role_JSON'
+        'Users_JSON', 'tableName', 'permission' , 'group_granRole_role_JSON'
     ];
+
+    /*protected function setKeysForSaveQuery(Builder $query)
+    {
+        $query
+            ->where('tableName', '=', $this->getAttribute('tableName'))
+            ->where('permission', '=', $this->getAttribute('permission'));
+        return $query;
+    }*/
 
 }

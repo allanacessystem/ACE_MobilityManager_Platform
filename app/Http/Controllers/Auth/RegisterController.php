@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Models\AuthorizationTables;
+use Illuminate\Support\Collection;
+
 use App\Http\Resources\registerUserRes;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -68,7 +70,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        User::create([
             'firstName' => $data['firstName'],
             'lastName' => $data['lastName'],
             'emailAddress' => $data['emailAddress'],
@@ -86,10 +88,16 @@ class RegisterController extends Controller
             'password' => $data['password'],
             'Roles_Permissions_JSON' => $data['Roles_Permissions_JSON'],
         ]);
+
+        $record = AuthorizationTables::where([['tableName', 'LIKE', '%home_tbl%'],
+                                              ['permission', 'LIKE', '%Read%'] ])->first();
+        $record->Users_JSON = $record->Users_JSON.",{ ".$data['emailAddress']." }";
+
+        $record->save();
     }
 
     public function index(){
-        $sms = AuthorizationTables::all();
-        return registerUserRes::collection($sms);
+        $tableList = AuthorizationTables::all()->unique();
+        return registerUserRes::collection($tableList);
     }
 }

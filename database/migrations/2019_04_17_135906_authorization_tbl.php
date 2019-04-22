@@ -16,6 +16,7 @@ class AuthorizationTbl extends Migration
         Schema::create('Authorization_tbl', function (Blueprint $table) {
 		    $table->longText('Users_JSON');
             $table->string('tableName');
+            $table->string('permission');
             //$table->string('webPagesAssociated');
 		    $table->longText('group_granRole_role_JSON');
 		

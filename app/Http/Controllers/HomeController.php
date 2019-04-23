@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Auth;
+
+use App\Models\AuthorizationTables;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +27,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $record = AuthorizationTables::where([
+            ['permission', 'Read'],
+            ['tableName' , 'home_tbl']])->first();
+
+        if (strpos($record->Users_JSON, Auth::user()->emailAddress) !== false) {
+            return view('home');
+        }else{
+            return view('welcome');
+        }
     }
 }

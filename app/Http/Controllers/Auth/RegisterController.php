@@ -81,24 +81,33 @@ class RegisterController extends Controller
     protected function AddUser(Request $request){
 
         $data = $request->all();
+        $json_Object = str_replace(',]', ']', $data['Roles_Permissions_JSON']);
+
+        $json = json_decode($json_Object, true);
+
         User::create([
             'firstName' => $data['firstName'],
             'lastName' => $data['lastName'],
             'emailAddress' => $data['emailAddress'],
             'password' => $data['password'],
-            'Roles_Permissions_JSON' => $data['Roles_Permissions_JSON'],
-        ]);
+            'Roles_Permissions_JSON' => $json_Object,//$data['Roles_Permissions_JSON'],
+        ]);        
         
-
-        $record = AuthorizationTables::where([
-            ['permission', 'Read'],
-            ['tableName' , 'home_tbl']])->first();
-        $record->Users_JSON = $record->Users_JSON.",{ ".$data['emailAddress']." }";
-        $record->save();
+        foreach($json as $key => $value){
+            //dd($key,$value);
+            foreach($value as $item){
+                $record = AuthorizationTables::where([
+                    ['permission', $item],
+                    ['tableName' , $key]])->first();
+        
+                $record->Users_JSON = $record->Users_JSON.",{ ".$data['emailAddress']." }";
+                $record->save();
+            }
+        }
     }
 
     public function index(){
-        $tableList = AuthorizationTables::all()->unique();
+        $tableList = AuthorizationTables::all()->unique('tableName');
         return registerUserRes::collection($tableList);
     }
 }

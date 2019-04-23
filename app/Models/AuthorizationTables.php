@@ -31,4 +31,24 @@ class AuthorizationTables extends Model
         return $query;
     }
 
+    protected function getKeyForSaveQuery()
+    {
+
+        $primaryKeyForSaveQuery = array(count($this->primaryKey));
+
+        foreach ($this->primaryKey as $i => $pKey) {
+            $primaryKeyForSaveQuery[$i] = isset($this->original[$this->getKeyName()[$i]])
+                ? $this->original[$this->getKeyName()[$i]]
+                : $this->getAttribute($this->getKeyName()[$i]);
+        }
+
+        return $primaryKeyForSaveQuery;
+
+    }
+
+    public function getKey()
+    {
+        return 'tableName';
+    }
+
 }

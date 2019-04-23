@@ -88,11 +88,12 @@ class RegisterController extends Controller
             'password' => $data['password'],
             'Roles_Permissions_JSON' => $data['Roles_Permissions_JSON'],
         ]);
+        
 
-        $record = AuthorizationTables::where([['tableName', 'LIKE', '%home_tbl%'],
-                                              ['permission', 'LIKE', '%Read%'] ])->first();
+        $record = AuthorizationTables::where([
+            ['permission', 'Read'],
+            ['tableName' , 'home_tbl']])->first();
         $record->Users_JSON = $record->Users_JSON.",{ ".$data['emailAddress']." }";
-
         $record->save();
     }
 

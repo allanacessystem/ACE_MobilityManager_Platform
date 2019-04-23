@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class AuthorizationTables extends Model
 {
     protected $table = "Authorization_tbl";
 
-    public $primaryKey = 'tableName';//[ 'tableName','permission'];
+    //public $primaryKey = 'tableName';
+    public $primaryKey = ['tableName','permission'];
 
     public $incrementing = false;
 
@@ -21,12 +23,12 @@ class AuthorizationTables extends Model
         'Users_JSON', 'tableName', 'permission' , 'group_granRole_role_JSON'
     ];
 
-    /*protected function setKeysForSaveQuery(Builder $query)
+    protected function setKeysForSaveQuery(Builder $query)
     {
         $query
             ->where('tableName', '=', $this->getAttribute('tableName'))
             ->where('permission', '=', $this->getAttribute('permission'));
         return $query;
-    }*/
+    }
 
 }
